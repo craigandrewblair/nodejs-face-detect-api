@@ -3,6 +3,8 @@ const express = require ('express');
 const app = express();
 const port = 4000;
 
+const bcrypt = require('bcrypt-nodejs');
+
 app.use(bodyParser.json());
 
 // Mimic Database
@@ -32,6 +34,13 @@ users: [
                 submissions: 0,
                 joindate: new Date()
             }
+        ],
+        login: [
+            {
+                id: '345',
+                hash: '',
+                email: 'jon@mail.com',
+            }
         ]
 }
 
@@ -40,6 +49,12 @@ users: [
 app.get('/',(req, res) => res.send(database.users));
 
 app.post('/signin',(req, res) => {
+    // bcrypt.compare("apples", $2a$10$Kz9rqwWJNbIm9l4dEI1hHOWRMMoKxgyACYD.r2dHxO2/oVhbM0zw6, function(err, res){
+    //     console.log("first guess", res);
+    // })
+    // bcrypt.compare("bacon", $2a$10$Kz9rqwWJNbIm9l4dEI1hHOWRMMoKxgyACYD.r2dHxO2/oVhbM0zw6, function(err, res){
+    //     console.log("second guess", res);
+    // })
     if(req.body.email === database.users[0].email && req.body.password === database.users[0].password){
         res.json("Success");
     }else{
@@ -62,12 +77,15 @@ app.get('/user/:id',(req, res) => {
 });
 
 app.post('/register',(req, res) => {
-    const {name, email, body} = req.body;
+    const {name, email, password} = req.body;
+    bcrypt.hash(password, null, null, function(err, hash){
+        console.log(hash);
+    });
     database.users.push({
         id: '004',
         name: name,
         email: email,
-        password: body,
+        password: password,
         submissions: 0,
         joindate: new Date()
     })

@@ -17,7 +17,7 @@ users: [
                 name: 'Jane Doe',
                 email: 'janedoe@mail.com',
                 password: 'cookie',
-                submissions: 0,
+                score: 0,
                 joindate: new Date()
             },
             {
@@ -25,7 +25,7 @@ users: [
                 name: 'John Doe',
                 email: 'johndoe@mail.com',
                 password: 'homer',
-                submissions: 0,
+                score: 0,
                 joindate: new Date()
             },
             {
@@ -33,7 +33,7 @@ users: [
                 name: 'Krabby Doe',
                 email: 'krabbydoe@mail.com',
                 password: 'play',
-                submissions: 0,
+                score: 0,
                 joindate: new Date()
             }
         ],
@@ -66,11 +66,26 @@ app.post('/signin',(req, res) => {
     }
 });
 
+app.post('/register',(req, res) => {
+    const {name, email, password} = req.body;
+    bcrypt.hash(password, null, null, function(err, hash){
+        console.log(hash);
+    });
+    database.users.push({
+        id: database.users.length,
+        name: name,
+        email: email,
+        score: 0,
+        joindate: new Date()
+    })
+    res.json(database.users[database.users.length-1]);
+});
+
 app.get('/user/:id',(req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     let found = false;
     database.users.forEach(user => {
-        if(id === user.id){
+        if(id === user.id) {
             found = true;
             return res.json(user);
         }
@@ -80,29 +95,15 @@ app.get('/user/:id',(req, res) => {
     }
 });
 
-app.post('/register',(req, res) => {
-    const {name, email, password} = req.body;
-    bcrypt.hash(password, null, null, function(err, hash){
-        console.log(hash);
-    });
-    database.users.push({
-        id: '004',
-        name: name,
-        email: email,
-        submissions: 0,
-        joindate: new Date()
-    })
-    res.json(database.users[database.users.length-1]);
-});
-
-app.put('/image', (req, res) => {
-    const {id} = req.body;
+app.post('/image', (req, res) => {
+    const { id } = req.body;
     let found = false;
     database.users.forEach(user => {
-        if(id === user.id){
+        if(user.id === id) {
             found = true;
-            user.submissions++;
-            return res.json(user.submissions++);
+            user.score++;
+            console.log(user);
+            return res.json(user);
         }
     });
     if(found === false){

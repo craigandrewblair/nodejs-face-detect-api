@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt-nodejs');
 const knex = require('knex');
 var cors = require('cors');
 require('dotenv').config();
+app.use(cors())
+app.use(bodyParser.json());
 
 const db = knex ({
     client: 'pg',
@@ -16,12 +18,11 @@ const db = knex ({
       database : 'face_detect'
     },
     pool: { min: 0, max: 7 }
-  });
-  
-  app.use(cors())
-  app.use(bodyParser.json());
+});
 
-  console.log(db.select('*').from('users'));
+// db.select('*').from('users').then(data => {
+//     console.log(data);
+// });
 
 // Mimic Database
 // const database = {
@@ -89,15 +90,28 @@ app.post('/register',(req, res) => {
     bcrypt.hash(password, null, null, function(err, hash){
         console.log(hash);
     });
-    database.users.push({
-        id: ("00" + database.users.length),
+    // The returning method specifies which column should be returned by the insert and update methods. 
+    // Passed column parameter may be a string or an array of strings
+    db('users')
+    .returning('*') 
+    .insert({
         name: name,
         email: email,
-        score: 0,
-        password: password,
         joindate: new Date()
     })
-    res.json(database.users[database.users.length-1]);
+    .then(response => {
+        res.json(response);
+    })
+    .catch(err => res.status(400).json(err));
+    // database.users.push({
+    //     id: ("00" + database.users.length),
+    //     name: name,
+    //     email: email,
+    //     score: 0,
+    //     password: password,
+    //     joindate: new Date()
+    // })
+    // res.json(database.users[database.users.length-1]);
 });
 
 app.get('/user/:id',(req, res) => {

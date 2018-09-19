@@ -117,15 +117,19 @@ app.post('/register',(req, res) => {
 app.get('/user/:id',(req, res) => {
     const { id } = req.params;
     let found = false;
-    database.users.forEach(user => {
-        if(id === user.id) {
-            found = true;
-            return res.json(user);
-        }
-    });
-    if(found === false){
-        return res.status(404).json("No such user");
-    }
+    db.select('*')
+    .from('users').where('id', '=', id)
+    .then(user => res.json(user))
+    .catch(err => res.status(400).json('ID not found'));
+    // database.users.forEach(user => {
+    //     if(id === user.id) {
+    //         found = true;
+    //         return res.json(user);
+    //     }
+    // });
+    // if(found === false){
+    //     return res.status(404).json("No such user");
+    // }
 });
 
 app.put('/image', (req, res) => {

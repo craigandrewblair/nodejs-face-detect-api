@@ -24,7 +24,7 @@ const db = knex ({
     pool: { min: 0, max: 7 }
 });
 
-app.get('/',(req, res) => res.send(db.users));
+app.get('/',(req, res) => res.send('Server is running...'));
 
 app.post('/signin', signin.handleSignin(db, bcrypt)); // Destructured - here and signin.js
 

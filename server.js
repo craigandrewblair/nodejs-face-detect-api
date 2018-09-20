@@ -32,6 +32,8 @@ app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcry
 
 app.put('/image', (req, res) => { image.handleImage(req, res, db) });
 
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
+
 app.get('/user/:id', (req, res) => { userid.handleUserid(req, res, db) });
 
 app.listen(port, () => console.log(`Express listening on port ${port}`));

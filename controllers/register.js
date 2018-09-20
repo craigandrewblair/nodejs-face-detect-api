@@ -1,5 +1,10 @@
 const handleRegister = (req, res, db, bcrypt) => {
+    
     const {name, email, password} = req.body;
+
+    if(!name || !email || !password){
+        return res.status(400).json('Please provide all fields.');
+    }
 
     var hash = bcrypt.hashSync(password);
         db.transaction(trx => {

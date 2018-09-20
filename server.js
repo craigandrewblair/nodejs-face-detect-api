@@ -1,7 +1,6 @@
 const bodyParser = require ('body-parser');
 const express = require ('express');
 const app = express();
-const port = 4000;
 const bcrypt = require('bcrypt-nodejs');
 const knex = require('knex');
 const register = require('./controllers/register.js');
@@ -36,4 +35,4 @@ app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 
 app.get('/user/:id', (req, res) => { userid.handleUserid(req, res, db) });
 
-app.listen(port, () => console.log(`Express listening on port ${port}`));
+app.listen(process.env.PORT || 4000, () => console.log(`Express listening on port ${port}`));

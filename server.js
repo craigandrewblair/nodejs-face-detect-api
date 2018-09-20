@@ -7,6 +7,7 @@ const register = require('./controllers/register.js');
 const signin = require('./controllers/signin.js');
 const image = require('./controllers/image.js');
 const userid = require('./controllers/userid.js');
+const PORT = process.env.PORT || 4000;
 var cors = require('cors');
 require('dotenv').config();
 app.use(cors())
@@ -35,4 +36,4 @@ app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 
 app.get('/user/:id', (req, res) => { userid.handleUserid(req, res, db) });
 
-app.listen(process.env.PORT || 4000, () => console.log(`Express listening on port ${port}`));
+app.listen(PORT, () => console.log(`Express listening on port ${PORT}`));

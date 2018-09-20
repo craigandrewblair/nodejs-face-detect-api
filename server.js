@@ -16,15 +16,15 @@ app.use(bodyParser.json());
 const db = knex ({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      user : 'admindb',
-      password : 'pa55w0rd',
-      database : 'face_detect'
+      host : process.env.DB_HOST,
+      user : process.env.DB_USER,
+      password : process.env.DB_PASSWORD,
+      database : process.env.DB_NAME
     },
     pool: { min: 0, max: 7 }
 });
 
-app.get('/',(req, res) => res.send(database.users));
+app.get('/',(req, res) => res.send(db.users));
 
 app.post('/signin', signin.handleSignin(db, bcrypt)); // Destructured - here and signin.js
 
@@ -37,9 +37,3 @@ app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 app.get('/user/:id', (req, res) => { userid.handleUserid(req, res, db) });
 
 app.listen(port, () => console.log(`Express listening on port ${port}`));
-
-// / -> res = Express root route
-// /register POST -> res(UserObj)
-// /signin POST -> success/fail
-// /profile:userId -> GET user
-// /image -> PUT -> user

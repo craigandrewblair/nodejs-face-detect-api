@@ -1,6 +1,7 @@
 const Clarifai = require ('clarifai');
+require('dotenv').config();
 
-const app = new Clarifai.App({ apiKey: '9817e5311ff941eca7a6d6a69f880c95' });
+const app = new Clarifai.App({ apiKey: process.env.CLARIFAI_API });
 
 const handleApiCall = (req, res) => {
     app.models.predict(Clarifai.FACE_DETECT_MODEL, req.body.imageUrl)
